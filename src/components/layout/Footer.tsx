@@ -1,23 +1,39 @@
 import { Facebook, Instagram, Twitter, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { usePublicPages } from '@/features/cms/hooks/useCMS'
+import { Link } from 'react-router-dom'
+
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const { data: pages = [] } = usePublicPages()
+
 
   const footerLinks = [
     {
-      title: 'Help',
-      links: ['Payments', 'Shipping', 'Cancellation & Returns', 'FAQ'],
-    },
-    {
       title: 'Company',
-      links: ['About Us', 'Careers', 'Become A Seller'],
+      links: [
+        ...pages.map((p: any) => ({ label: p.title, path: `/${p.slug}` })),
+      ],
     },
     {
-      title: 'Policy',
-      links: ['Privacy Policy', 'Terms of Use', 'Refund Policy'],
+      title: 'For Vendors',
+      links: [
+        { label: 'Become A Seller', path: '/vendors/register' },
+        { label: 'Admin Portal', path: 'http://localhost:5173/admin', external: true },
+      ],
+    },
+    {
+      title: 'Support',
+      links: [
+        { label: 'Contact Us', path: '/profile/support' },
+        { label: 'My Orders', path: '/profile/orders' },
+        { label: 'Today\'s Deals', path: '/deals' },
+      ],
     },
   ]
+
+
 
   return (
     <footer className="w-full bg-black text-white pt-20 pb-10">
@@ -25,10 +41,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 border-b border-neutral-800 pb-16">
           {/* Brand & Description */}
           <div className="lg:col-span-2 space-y-6">
-            <h2 className="text-2xl font-black tracking-tighter">WEBSITE</h2>
+            <h2 className="text-2xl font-black tracking-tighter">CODEEDEX</h2>
             <p className="text-neutral-400 max-w-xs leading-relaxed">
-              Lorem Ipsum, 235 Simply, printing, Pin 309 309
+              Your one-stop destination for premium products and a seamless shopping experience.
             </p>
+
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
@@ -66,17 +83,30 @@ const Footer = () => {
             <div key={section.title} className="space-y-6">
               <h3 className="text-lg font-bold tracking-tight">{section.title}</h3>
               <ul className="space-y-4">
-                {section.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-neutral-400 hover:text-white transition-colors text-sm font-medium"
-                    >
-                      {link}
-                    </a>
+                {section.links.map((link: any) => (
+                  <li key={link.label}>
+                    {link.external ? (
+                      <a
+                        href={link.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-neutral-400 hover:text-white transition-colors text-sm font-medium"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        to={link.path}
+                        className="text-neutral-400 hover:text-white transition-colors text-sm font-medium"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
+
               </ul>
+
             </div>
           ))}
         </div>
@@ -84,9 +114,10 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="mt-10 flex flex-col md:flex-row justify-center items-center text-center">
           <p className="text-neutral-500 text-sm font-medium">
-            © {currentYear} Website, All Rights Reserved.
+            © {currentYear} Codeedex, All Rights Reserved.
           </p>
         </div>
+
       </div>
     </footer>
   )

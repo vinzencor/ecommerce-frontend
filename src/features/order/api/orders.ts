@@ -2,6 +2,8 @@ import api from '@/lib/axios'
 
 export interface OrderItem {
   id: string
+  productId: string
+  variantId: string
   productName: string
   quantity: number
   price: number
@@ -12,7 +14,7 @@ export interface Order {
   id: string
   orderNumber: string
   totalAmount: number
-  status: 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED'
+  status: 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'RETURN_REQUESTED' | 'RETURN_APPROVED' | 'RETURN_REJECTED' | 'RETURNED'
   paymentStatus: string
   paymentMethod: string
   createdAt: string
@@ -43,4 +45,14 @@ export const placeOrder = async (data: {
 }): Promise<Order> => {
   const response = await api.post('/orders', data)
   return response.data.data
+}
+
+export const cancelOrder = async (id: string, reason: string): Promise<any> => {
+  const response = await api.post(`/orders/${id}/cancel`, { reason })
+  return response.data
+}
+
+export const requestReturn = async (id: string, data: { reason: string, images?: string[] }): Promise<any> => {
+  const response = await api.post(`/orders/${id}/return`, data)
+  return response.data
 }

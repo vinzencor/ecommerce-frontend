@@ -35,6 +35,21 @@ export function ProductInfo({ product }: ProductInfoProps) {
     }
   }
 
+  const handleBuyNow = async () => {
+    if (!isAuthenticated) {
+      navigate('/login')
+      return
+    }
+
+    try {
+      await addToCart({ variantId: primaryVariant.id, quantity })
+      navigate('/checkout')
+    } catch (err) {
+      console.error('Failed to buy now', err)
+    }
+  }
+
+
   return (
     <div className="flex flex-col w-full">
       {/* Brand & Title */}
@@ -107,21 +122,21 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {/* Add To Cart Actions */}
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
         {/* Quantity */}
-        <div className="flex items-center border border-neutral-300 rounded-sm h-12 w-full sm:w-32 shrink-0">
+        <div className="flex items-center bg-[#F5F5F5] border border-[#EDEDFD] rounded-[14px] h-14 w-full sm:w-36 shrink-0 shadow-sm">
           <button
-            className="flex-1 flex justify-center items-center h-full text-neutral-500 hover:text-black transition-colors"
+            className="flex-1 flex justify-center items-center h-full text-[#666] hover:text-[#291F1F] transition-colors"
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
           >
-            <Minus className="size-3.5" />
+            <Minus className="size-4" />
           </button>
-          <span className="flex-1 text-center text-[15px] font-bold text-black font-mono">
+          <span className="flex-1 text-center text-[16px] font-black text-[#291F1F]">
             {quantity}
           </span>
           <button
-            className="flex-1 flex justify-center items-center h-full text-neutral-500 hover:text-black transition-colors"
+            className="flex-1 flex justify-center items-center h-full text-[#666] hover:text-[#291F1F] transition-colors"
             onClick={() => setQuantity(Math.min(primaryVariant.stock, quantity + 1))}
           >
-            <Plus className="size-3.5" />
+            <Plus className="size-4" />
           </button>
         </div>
 
@@ -129,20 +144,22 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <button
           onClick={handleAddToCart}
           className={cn(
-            'flex-1 h-12 text-[14px] font-bold rounded-sm transition-all uppercase tracking-widest disabled:opacity-50',
-            isSuccess ? 'bg-green-600 text-white' : 'bg-black text-white hover:bg-neutral-800'
+            'flex-1 h-16 text-[14px] font-black rounded-[14px] transition-all uppercase tracking-widest disabled:opacity-50 shadow-lg active:scale-[0.98]',
+            isSuccess 
+              ? 'bg-[#2B9950] text-white shadow-[#2B9950]/20' 
+              : 'bg-[#505081] text-white hover:bg-[#3D3D66] shadow-[#505081]/20'
           )}
           disabled={primaryVariant.stock === 0 || isAdding}
         >
           {isAdding ? (
             <div className="flex items-center justify-center gap-2">
-              <Loader2 className="size-4 animate-spin" />
+              <Loader2 className="size-5 animate-spin" />
               Adding...
             </div>
           ) : isSuccess ? (
             <div className="flex items-center justify-center gap-2">
-              <Check className="size-4" />
-              Added!
+              <Check className="size-5" />
+              Added to Cart!
             </div>
           ) : primaryVariant.stock === 0 ? (
             'Out of Stock'
@@ -154,11 +171,13 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Buy Now */}
       <button
-        className="w-full h-12 bg-white border border-neutral-300 text-black text-[14px] font-bold rounded-sm hover:border-black transition-colors mb-8 uppercase tracking-widest"
+        onClick={handleBuyNow}
+        className="w-full h-16 bg-white border-2 border-[#291F1F] text-[#291F1F] text-[14px] font-black rounded-[14px] hover:bg-[#291F1F] hover:text-white transition-all mb-8 uppercase tracking-widest active:scale-[0.98]"
         disabled={primaryVariant.stock === 0 || isAdding}
       >
         Buy Now
       </button>
+
 
       {/* Shipping details */}
       <div className="flex flex-col gap-5 p-6 bg-neutral-50 rounded-lg border border-neutral-100">

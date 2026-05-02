@@ -32,3 +32,28 @@ export const useOrder = (id: string | null) => {
     enabled: !!id,
   })
 }
+export const useOrderActions = () => {
+  const queryClient = useQueryClient()
+
+  const cancelOrderMutation = useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason: string }) => orderApi.cancelOrder(id, reason),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['order', variables.id] })
+      queryClient.invalidateQueries({ queryKey: ['orders'] })
+    },
+  })
+
+  const requestReturnMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: { reason: string; images?: string[] } }) =>
+      orderApi.requestReturn(id, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['order', variables.id] })
+      queryClient.invalidateQueries({ queryKey: ['orders'] })
+    },
+  })
+
+  return {
+    cancelOrder: cancelOrderMutation,
+    requestReturn: requestReturnMutation,
+  }
+}

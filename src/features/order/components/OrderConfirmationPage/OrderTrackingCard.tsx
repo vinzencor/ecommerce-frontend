@@ -2,6 +2,8 @@ import { Download, Package, Truck, Check, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { Order } from '../../api/orders'
+import { generateInvoicePDF } from '@/lib/invoice'
+
 
 interface OrderTrackingCardProps {
   order: Order
@@ -15,8 +17,8 @@ export default function OrderTrackingCard({ order }: OrderTrackingCardProps) {
     {
       label: 'Confirmed',
       icon: Package,
-      completed: ['CONFIRMED', 'SHIPPED', 'DELIVERED'].includes(status),
-      active: status === 'CONFIRMED',
+      completed: ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'].includes(status),
+      active: status === 'CONFIRMED' || status === 'PROCESSING',
     },
     {
       label: 'Shipped',
@@ -44,10 +46,12 @@ export default function OrderTrackingCard({ order }: OrderTrackingCardProps) {
         <Button
           variant="black"
           className="h-10 px-6 rounded-sm text-[13px] font-bold tracking-tight"
+          onClick={() => generateInvoicePDF(order)}
         >
           <Download size={16} className="mr-2" />
           Download Invoice
         </Button>
+
       </div>
 
       <div className="relative pt-6 pb-4">
@@ -60,7 +64,7 @@ export default function OrderTrackingCard({ order }: OrderTrackingCardProps) {
             width:
               status === 'PENDING'
                 ? '0%'
-                : status === 'CONFIRMED'
+                : status === 'CONFIRMED' || status === 'PROCESSING'
                   ? '33%'
                   : status === 'SHIPPED'
                     ? '66%'
@@ -119,13 +123,6 @@ export default function OrderTrackingCard({ order }: OrderTrackingCardProps) {
         </div>
       </div>
 
-      <Button
-        variant="black"
-        className="h-11 px-8 rounded-sm text-[13px] font-black tracking-widest mt-4"
-      >
-        <Search size={16} className="mr-2" />
-        Track Order
-      </Button>
     </div>
   )
 }

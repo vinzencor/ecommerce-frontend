@@ -1,6 +1,7 @@
 import React from 'react'
 import { Star } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { cn } from '@/lib/utils'
 
 export interface DealCardProps {
   id: string
@@ -11,6 +12,7 @@ export interface DealCardProps {
   price: number
   originalPrice: number
   discount: number
+  className?: string
 }
 
 export function DealCard({
@@ -22,54 +24,58 @@ export function DealCard({
   price,
   originalPrice,
   discount,
+  className,
 }: DealCardProps) {
   return (
     <Link
       to={`/product/${id}`}
-      className="bg-white p-2.5 sm:p-3 md:p-4 rounded-sm flex flex-col gap-2 md:gap-3 w-full h-full isolate shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+      className={cn(
+        'relative bg-[#F5F5F5] rounded-[22px] border border-[#EDEDFD] overflow-hidden flex flex-col w-full transition-shadow duration-200 hover:shadow-md group p-3',
+        className
+      )}
     >
       {/* Product Image */}
-      <div className="w-full aspect-square bg-neutral-100 rounded-sm overflow-hidden isolate relative">
+      <div className="w-full aspect-square bg-[#F5F5F5] rounded-[18px] overflow-hidden relative">
         <img
           src={image || undefined}
           alt={brand}
           loading="lazy"
-          decoding="async"
-          className="w-full h-full object-cover object-center mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-contain p-2 transition-transform duration-700 group-hover:scale-110"
         />
       </div>
 
       {/* Product Info */}
-      <div className="space-y-1 md:space-y-1.5">
-        <div className="flex items-center justify-between">
-          <h3 className="font-bold text-[#282C3F] text-[13px] md:text-[15px] truncate max-w-[75%]">
+      <div className="px-3 pb-3 pt-4 flex flex-col gap-1.5 flex-1">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="font-bold text-[#291F1F] text-[16px] truncate">
             {brand}
           </h3>
-          <div className="flex items-center gap-0.5 md:gap-1 text-[#FFC107]">
-            <Star className="fill-current size-3 md:size-3.5" />
-            <span className="text-[11px] md:text-[13px] font-medium text-neutral-600">
+          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-white/50 backdrop-blur-sm border border-[#EDEDFD]">
+            <Star className="fill-orange-400 text-orange-400 size-3" />
+            <span className="text-[12px] font-bold text-[#291F1F]">
               {rating.toFixed(1)}
             </span>
           </div>
         </div>
 
-        <p className="text-[#535766] text-[12px] md:text-[13px] truncate">{title}</p>
-      </div>
+        <p className="text-[#666] text-[13px] truncate">{title}</p>
 
-      {/* Pricing */}
-      <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mt-auto pt-1">
-        <span className="font-bold text-[#282C3F] text-[13px] md:text-[15px]">
-          ₹{price.toLocaleString()}
-        </span>
-        <span className="text-neutral-400 text-[11px] md:text-[13px] line-through">
-          ₹{originalPrice.toLocaleString()}
-        </span>
-        <span className="text-[#03A685] text-[11px] md:text-[13px] font-bold">
-          ({discount}% OFF)
-        </span>
+        {/* Pricing */}
+        <div className="flex flex-wrap items-center gap-1.5 mt-auto pt-2">
+          <span className="font-bold text-black text-[16px]">
+            ₹{price.toLocaleString('en-IN')}
+          </span>
+          <span className="text-[#666] text-[14px] line-through font-medium">
+            ₹{originalPrice.toLocaleString('en-IN')}
+          </span>
+          <span className="text-[#2B9950] text-[14px] font-bold">
+            ({discount}% OFF)
+          </span>
+        </div>
       </div>
     </Link>
   )
 }
 
 export default React.memo(DealCard)
+

@@ -91,10 +91,10 @@ export function CategorySection({ categories: backendCategories }: CategorySecti
         </button>
       )}
 
-      <div className="w-full max-w-360 mx-auto px-4 md:px-8 lg:px-16">
+      <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-16">
         <div
           ref={scrollContainerRef}
-          className="flex items-center justify-start pt-2 pb-10 overflow-x-auto no-scrollbar gap-4 md:gap-10 lg:gap-14 xl:gap-16"
+          className="flex items-center justify-start pt-4 pb-12 overflow-x-auto no-scrollbar gap-6 md:gap-10 lg:gap-14 xl:gap-16"
         >
           {displayCategories.map((category) => {
             const isActive = activeId === category.id
@@ -103,29 +103,32 @@ export function CategorySection({ categories: backendCategories }: CategorySecti
               <button
                 key={category.id}
                 onClick={() => setActiveId(category.id)}
-                className="group/item flex flex-col items-center gap-4 transition-all relative pb-2 min-w-fit"
+                className="group/item flex flex-col items-center gap-3 transition-all relative min-w-fit"
               >
                 {/* Circle Image Container */}
                 <div
                   className={cn(
-                    'w-17.5 h-17.5 rounded-full flex items-center justify-center border transition-all duration-300',
+                    'w-14 h-14 md:w-16 lg:w-20 md:h-16 lg:h-20 rounded-full flex items-center justify-center border transition-all duration-300',
                     isActive
-                      ? 'bg-[#D4A373] border-[#D2D2D2]'
-                      : 'bg-[#F0EFEF] border-[#D2D2D2] hover:bg-neutral-200 shadow-sm'
+                      ? 'bg-[#505081] border-[#505081] shadow-lg scale-110'
+                      : 'bg-[#F5F5F5] border-[#EDEDFD] hover:bg-white hover:shadow-md'
                   )}
                 >
                   <img
                     src={category.imageUrl}
                     alt={category.name}
-                    className="w-[50%] h-[50%] object-contain drop-shadow-md"
+                    className={cn(
+                      "w-[70%] h-[70%] object-contain transition-all duration-300 group-hover/item:scale-110",
+                      isActive ? "scale-110" : ""
+                    )}
                   />
                 </div>
 
                 {/* Label */}
                 <span
                   className={cn(
-                    'text-[14px] font-medium text-[#282C3F] transition-colors whitespace-nowrap',
-                    isActive && 'font-bold text-black'
+                    'text-[12px] md:text-[14px] font-bold text-[#666] transition-colors whitespace-nowrap',
+                    isActive && 'text-[#291F1F]'
                   )}
                 >
                   {category.name}
@@ -133,8 +136,8 @@ export function CategorySection({ categories: backendCategories }: CategorySecti
 
                 {isActive && (
                   <div
-                    className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 h-0.75 bg-[#D4A373] rounded-t-lg"
-                    style={{ width: '60px' }}
+                    className="absolute -bottom-3 left-1/2 -translate-x-1/2 h-1.5 bg-[#505081] rounded-t-full shadow-sm"
+                    style={{ width: '24px' }}
                   />
                 )}
               </button>

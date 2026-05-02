@@ -38,6 +38,12 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Feel Good Theme Variables */
+  --soft-bg: #F5F5F5;
+  --soft-border: #EDEDFD;
+  --accent-main: #505081;
+  --text-dark: #291F1F;
 }
 
 .dark {

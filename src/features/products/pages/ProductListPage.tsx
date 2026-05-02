@@ -60,17 +60,21 @@ export default function ProductListPage() {
           )}
         </div>
 
-        {/* Two Column Layout */}
-        <div className="flex flex-col lg:flex-row gap-10 items-start">
-          {/* Left Column: Filters */}
-          <ProductFilters />
+        {/* Desktop: Two Columns | Mobile: Single Column Stack */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-stretch lg:items-start w-full">
+          {/* Filters (Horizontal Bar on Mobile | Sidebar on Desktop) */}
+          <div className="w-full lg:w-72 shrink-0">
+            <ProductFilters />
+          </div>
 
-          {/* Right Column: Grid and Meta */}
-          <ProductGrid
-            products={data?.products || []}
-            total={data?.pagination.total || 0}
-            isLoading={isLoading}
-          />
+          {/* Product Grid and Meta */}
+          <main className="flex-1 w-full min-w-0">
+            <ProductGrid
+              products={data?.products || []}
+              total={data?.pagination.total || 0}
+              isLoading={isLoading}
+            />
+          </main>
         </div>
       </div>
     </div>

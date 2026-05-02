@@ -1,8 +1,7 @@
-import { ArrowRight } from 'lucide-react'
 import { DealCard } from '@/components/common/cards/DealCard'
 import { PromoCard } from './PromoCard'
-import { Button } from '@/components/ui/button'
 import { type BackendProduct, mapProductToDealCard } from '@/lib/mapping'
+
 
 interface RecommendedDealsProps {
   products: BackendProduct[]
@@ -10,36 +9,30 @@ interface RecommendedDealsProps {
 
 export function RecommendedDeals({ products }: RecommendedDealsProps) {
   return (
-    <div className="w-full max-w-360 mx-auto px-4 md:px-8 lg:px-16 relative mt-10 mb-10">
-      <div className="flex items-center justify-between mb-6 px-1">
-        <h2 className="text-[18px] md:text-[22px] tracking-tight font-black uppercase text-black">
-          Recommended Deals For You
-        </h2>
+    <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-16 relative mt-16 mb-16">
+      <div className="flex items-center justify-between mb-8">
+        <div className="space-y-1">
+          <h2 className="text-[24px] md:text-[32px] font-black text-[#291F1F] tracking-tight uppercase">
+            Recommended Deals
+          </h2>
+          <div className="h-1 w-20 bg-[#505081] rounded-full" />
+        </div>
       </div>
 
       {/* Main Container */}
-      <div className="bg-[#F8F8F8] rounded-xl sm:rounded-2xl p-3 sm:p-6 md:p-8 relative group">
-        {/* Navigation Arrow */}
-        <div className="absolute top-4 right-4 z-10 hidden sm:block">
-          <Button
-            variant="white"
-            size="icon"
-            className="rounded-full shadow-sm hover:shadow-md h-10 w-10 bg-white"
-          >
-            <ArrowRight strokeWidth={2} className="size-5" />
-          </Button>
-        </div>
-
-        {/* Grid Row */}
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6 pb-1 sm:pb-2 pt-2 sm:pt-6">
+      <div className="bg-[#F5F5F5] border border-[#EDEDFD] rounded-[22px] p-3 md:p-10 relative shadow-sm overflow-hidden">
+        {/* Responsive Layout: Scroll on mobile, Grid on desktop */}
+        <div className="flex lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 overflow-x-auto no-scrollbar pb-2 lg:pb-0">
           {/* Static Promo Card */}
-          <div className="w-full h-full">
+          <div className="min-w-[280px] w-[280px] lg:w-full h-auto min-h-[320px] shrink-0">
             <PromoCard />
           </div>
 
           {/* Render real data from backend mapped to DealCard props */}
-          {products.map((product) => (
-            <DealCard key={product.id} {...mapProductToDealCard(product)} />
+          {products.slice(0, 6).map((product) => (
+            <div key={product.id} className="min-w-[260px] w-[260px] lg:w-full shrink-0">
+              <DealCard {...mapProductToDealCard(product)} />
+            </div>
           ))}
         </div>
       </div>

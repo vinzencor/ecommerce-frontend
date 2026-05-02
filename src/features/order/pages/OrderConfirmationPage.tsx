@@ -4,14 +4,40 @@ import OrderInfoBox from '../components/OrderConfirmationPage/OrderInfoBox'
 import ShippedItemsTable from '../components/OrderConfirmationPage/ShippedItemsTable'
 import { Button } from '@/components/ui/button'
 import { Link, useLocation, useParams } from 'react-router-dom'
-import { useOrder } from '../hooks/useOrders'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { useOrder, useOrderActions } from '../hooks/useOrders'
+import { Loader2, AlertCircle, XCircle, RotateCcw } from 'lucide-react'
+import { OrderActionModal } from '../components/OrderConfirmationPage/OrderActionModals'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function OrderConfirmationPage() {
   const location = useLocation()
   const params = useParams()
   const orderId = location.state?.orderId || params.orderId
   const { data: order, isLoading, isError } = useOrder(orderId)
+  const { cancelOrder, requestReturn } = useOrderActions()
+
+  const [modalType, setModalType] = useState<'CANCEL' | 'RETURN' | null>(null)
+
+  const handleAction = async (reason: string) => {
+    if (!order) return
+    
+    try {
+      if (modalType === 'CANCEL') {
+        await cancelOrder.mutateAsync({ id: order.id, reason })
+        toast.success('Order cancelled successfully')
+      } else if (modalType === 'RETURN') {
+        await requestReturn.mutateAsync({ id: order.id, data: { reason } })
+        toast.success('Return request submitted')
+      }
+      setModalType(null)
+    } catch (err) {
+      toast.error('Failed to process request')
+    }
+  }
+
+  const showCancelButton = order && ['PENDING', 'CONFIRMED'].includes(order.status)
+  const showReturnButton = order && order.status === 'DELIVERED'
 
   if (isLoading) {
     return (
@@ -81,16 +107,46 @@ export default function OrderConfirmationPage() {
               Contact Us
             </Link>
           </p>
-          <Link to="/products">
-            <Button
-              variant="black"
-              className="h-12 px-10 rounded-sm text-[13px] font-black tracking-widest uppercase shadow-lg"
-            >
-              Continue Shopping
-            </Button>
-          </Link>
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            {showCancelButton && (
+              <Button
+                variant="outline"
+                onClick={() => setModalType('CANCEL')}
+                className="h-12 px-8 rounded-sm text-[13px] font-black tracking-widest uppercase border-2 border-red-500 text-red-500 hover:bg-red-50 transition-all gap-2"
+              >
+                <XCircle size={16} />
+                Cancel Order
+              </Button>
+            )}
+            {showReturnButton && (
+              <Button
+                variant="outline"
+                onClick={() => setModalType('RETURN')}
+                className="h-12 px-8 rounded-sm text-[13px] font-black tracking-widest uppercase border-2 border-orange-500 text-orange-500 hover:bg-orange-50 transition-all gap-2"
+              >
+                <RotateCcw size={16} />
+                Return Product
+              </Button>
+            )}
+            <Link to="/products">
+              <Button
+                variant="black"
+                className="h-12 px-10 rounded-sm text-[13px] font-black tracking-widest uppercase shadow-lg"
+              >
+                Continue Shopping
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
+
+      <OrderActionModal
+        isOpen={!!modalType}
+        onClose={() => setModalType(null)}
+        type={modalType || 'CANCEL'}
+        isSubmitting={cancelOrder.isPending || requestReturn.isPending}
+        onConfirm={handleAction}
+      />
     </div>
   )
 }
