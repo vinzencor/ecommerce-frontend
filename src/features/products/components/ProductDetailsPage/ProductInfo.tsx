@@ -122,7 +122,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {/* Add To Cart Actions */}
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
         {/* Quantity */}
-        <div className="flex items-center bg-[#F5F5F5] border border-[#EDEDFD] rounded-[14px] h-14 w-full sm:w-36 shrink-0 shadow-sm">
+        <div className="flex items-center bg-[#F5F5F5] border border-[#EDEDFD] rounded-[14px] min-h-[52px] h-14 w-full sm:w-36 shrink-0 shadow-sm">
           <button
             className="flex-1 flex justify-center items-center h-full text-[#666] hover:text-[#291F1F] transition-colors"
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -144,7 +144,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <button
           onClick={handleAddToCart}
           className={cn(
-            'flex-1 h-16 text-[14px] font-black rounded-[14px] transition-all uppercase tracking-widest disabled:opacity-50 shadow-lg active:scale-[0.98]',
+            'flex-1 min-h-[52px] h-14 sm:h-16 text-[14px] font-black rounded-[14px] transition-all uppercase tracking-widest disabled:opacity-50 shadow-lg active:scale-[0.98]',
             isSuccess 
               ? 'bg-[#2B9950] text-white shadow-[#2B9950]/20' 
               : 'bg-[#505081] text-white hover:bg-[#3D3D66] shadow-[#505081]/20'
@@ -172,7 +172,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {/* Buy Now */}
       <button
         onClick={handleBuyNow}
-        className="w-full h-16 bg-white border-2 border-[#291F1F] text-[#291F1F] text-[14px] font-black rounded-[14px] hover:bg-[#291F1F] hover:text-white transition-all mb-8 uppercase tracking-widest active:scale-[0.98]"
+        className="w-full min-h-[52px] h-14 sm:h-16 bg-white border-2 border-[#291F1F] text-[#291F1F] text-[14px] font-black rounded-[14px] hover:bg-[#291F1F] hover:text-white transition-all mb-8 uppercase tracking-widest active:scale-[0.98]"
         disabled={primaryVariant.stock === 0 || isAdding}
       >
         Buy Now
