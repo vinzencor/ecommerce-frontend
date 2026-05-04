@@ -1,4 +1,4 @@
-import { Download, Package, Truck, Check, Search } from 'lucide-react'
+import { Download, Package, Truck, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { Order } from '../../api/orders'
